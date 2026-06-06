@@ -1,5 +1,6 @@
 from app.models.ingredient import Ingredient
+from app.models.pantry import PantryEntry
 from app.models.recipe import Recipe, RecipeIngredient
 from app.models.user import User
 
-__all__ = ["Ingredient", "Recipe", "RecipeIngredient", "User"]
+__all__ = ["Ingredient", "PantryEntry", "Recipe", "RecipeIngredient", "User"]

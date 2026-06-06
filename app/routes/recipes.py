@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, SQLModel, select
 
 from app.db import get_session
-from app.models.ingredient import Ingredient
 from app.models.recipe import Recipe, RecipeIngredient
+from app.services.units import fetch_and_validate_units
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
@@ -60,30 +60,9 @@ class RecipeRead(SQLModel):
 def _validate_ingredient_units(
     items: list[RecipeIngredientIn], session: Session
 ) -> None:
-    if not items:
-        return
-    ids = {item.ingredient_id for item in items}
-    rows = session.exec(select(Ingredient).where(Ingredient.id.in_(ids))).all()
-    by_id: dict[int, Ingredient] = {row.id: row for row in rows}
-
-    missing = sorted(ids - by_id.keys())
-    if missing:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            detail=f"unknown ingredient_id(s): {missing}",
-        )
-
-    for item in items:
-        ing = by_id[item.ingredient_id]
-        if item.unit != ing.purchase_unit and item.unit not in ing.unit_conversions:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-                detail=(
-                    f"unit '{item.unit}' is not defined for ingredient "
-                    f"'{ing.name}' (purchase_unit='{ing.purchase_unit}', "
-                    f"known units={sorted(ing.unit_conversions.keys())})"
-                ),
-            )
+    fetch_and_validate_units(
+        ((item.ingredient_id, item.unit) for item in items), session
+    )
 
 
 def _to_read(recipe: Recipe) -> RecipeRead:
