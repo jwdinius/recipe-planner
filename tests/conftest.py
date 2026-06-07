@@ -18,6 +18,7 @@ def client(tmp_path, monkeypatch) -> Iterator[TestClient]:
     import app.routes.health as health_mod
     import app.routes.ingredients as ingredients_mod
     import app.routes.pantry as pantry_mod
+    import app.routes.plans as plans_mod
     import app.routes.ratings as ratings_mod
     import app.routes.recipes as recipes_mod
     import app.routes.recommendations as recommendations_mod
@@ -29,6 +30,7 @@ def client(tmp_path, monkeypatch) -> Iterator[TestClient]:
     importlib.reload(pantry_mod)
     importlib.reload(ratings_mod)
     importlib.reload(recommendations_mod)
+    importlib.reload(plans_mod)
     importlib.reload(main_mod)
 
     from app.models import User  # noqa: F401

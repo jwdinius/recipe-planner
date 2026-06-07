@@ -10,6 +10,7 @@ dependencies = [
     "sqlmodel>=0.0.22",
     "alembic>=1.14",
     "pydantic>=2.9",
+    "ortools>=9.11",
 ]
 
 [dependency-groups]
