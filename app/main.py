@@ -4,6 +4,7 @@ from app.routes import (
     health,
     ingredients,
     pantry,
+    plans,
     ratings,
     recipes,
     recommendations,
@@ -16,3 +17,4 @@ app.include_router(recipes.router)
 app.include_router(pantry.router)
 app.include_router(ratings.router)
 app.include_router(recommendations.router)
+app.include_router(plans.router)
