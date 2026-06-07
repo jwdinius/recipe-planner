@@ -17,6 +17,16 @@ def is_hard_excluded(session: Session, recipe_id: int) -> bool:
     return row is not None
 
 
+def hard_exclude_user_ids(session: Session, recipe_id: int) -> list[int]:
+    rows = session.exec(
+        select(Rating.user_id).where(
+            Rating.recipe_id == recipe_id,
+            Rating.value == DISLIKE,
+        )
+    ).all()
+    return sorted(rows)
+
+
 def preference_points(session: Session, recipe_id: int) -> int:
     ratings = session.exec(
         select(Rating).where(Rating.recipe_id == recipe_id)
