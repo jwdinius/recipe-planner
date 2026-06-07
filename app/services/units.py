@@ -35,3 +35,17 @@ def fetch_and_validate_units(
                 ),
             )
     return by_id
+
+
+def to_purchase_units(
+    quantity: float, unit: str, ingredient: Ingredient
+) -> float:
+    if unit == ingredient.purchase_unit:
+        return quantity
+    factor = ingredient.unit_conversions.get(unit)
+    if factor is None:
+        raise ValueError(
+            f"unit '{unit}' has no conversion to purchase_unit "
+            f"'{ingredient.purchase_unit}' for ingredient '{ingredient.name}'"
+        )
+    return quantity * factor
