@@ -27,6 +27,9 @@ class RecipeCandidate:
     preference_points: int
     hard_excluded: bool
     demands: tuple[RecipeDemand, ...]
+    recency_value: float = 0.0
+    cuisine: str = ""
+    excluded_by_user_ids: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -51,6 +54,8 @@ class PlanEntry:
 class ScoreBreakdown:
     waste: float
     preference: float
+    recency: float
+    variety: float
     total: float
 
 
@@ -64,7 +69,15 @@ class GroceryItem:
 
 
 @dataclass(frozen=True)
+class PlanWarning:
+    recipe_id: int
+    message: str
+    excluding_user_ids: tuple[int, ...]
+
+
+@dataclass(frozen=True)
 class PlanResult:
     plan: tuple[PlanEntry, ...]
     score_breakdown: ScoreBreakdown
     grocery_list: tuple[GroceryItem, ...]
+    warnings: tuple[PlanWarning, ...] = ()
